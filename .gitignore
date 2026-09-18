@@ -12,3 +12,4 @@ docker/db/data/
 .vscode
 .bloop
 metals.sbt
+.scalafmt.conf
