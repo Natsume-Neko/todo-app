@@ -9,8 +9,8 @@ case class TodoCategory(
   val name:      String,
   val slug:      String,
   val color:     TodoCategory.Color,
-  val createdAt: LocalDateTime = NOW,
   val updatedAt: LocalDateTime = NOW,
+  val createdAt: LocalDateTime = NOW,
 ) extends EntityModel[TodoCategory.Id]
 
 object TodoCategory {

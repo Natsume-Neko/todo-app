@@ -10,8 +10,8 @@ case class Todo(
   val title:      String,
   val body:       String,
   val state:      Todo.State,
-  val createdAt:  LocalDateTime = NOW,
   val updatedAt:  LocalDateTime = NOW,
+  val createdAt:  LocalDateTime = NOW,
 ) extends EntityModel[Todo.Id]
 
 object Todo {
