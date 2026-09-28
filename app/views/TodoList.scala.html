@@ -1,0 +1,35 @@
+@import lib.model.Todo.State._
+@import lib.model.TodoCategory.Color._
+@(vv: model.ViewValueTodoList)
+@common.Default(vv){
+  <table>
+    <thead>
+      <tr><th>タイトル</th><th>本文</th><th>ステータス</th><th>カテゴリ</th></tr>
+    </thead>
+    <tbody>
+    @for(todo <- vv.todos) {
+      <tr>
+        <td>@todo.title</td>
+        <td>@todo.body</td>
+        <td>@{
+          todo.state match {
+            case NotBegin => "TODO"
+            case Doing    => "進行中"
+            case Done     => "完了"
+          }
+        }</td>
+        <td style="background-color: @{
+          todo.color match {
+            case Blue => "#3182ce"
+            case Green => "#2f855a"
+            case Red => "#c53030"
+            case Yellow => "#d69e2e"
+          }
+        }">
+          @todo.category_name
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+}
