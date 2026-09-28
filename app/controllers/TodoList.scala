@@ -8,6 +8,8 @@ import model.ViewValueTodoItem
 import model.TodoForm
 import play.api.data.Form
 import model.TodoAddData
+import lib.model.Todo
+import lib.model.TodoCategory
 
 @Singleton
 class TodoListController @Inject() (
@@ -19,7 +21,23 @@ class TodoListController @Inject() (
     renderTodoList(TodoForm.create).map(Ok(_))
   }
 
-  def renderTodoList(form: Form[TodoAddData])(implicit req: Request[AnyContent]) = {
+  def create() = Action.async { implicit req =>
+    TodoForm.create.bindFromRequest().fold(
+      formWithError => renderTodoList(formWithError).map(BadRequest(_)),
+      formData => {
+        val todo = Todo(
+          None,
+          TodoCategory.Id(formData.categoryId),
+          formData.title,
+          formData.body,
+          Todo.State.NotBegin,
+        ).toWithNoId
+        todoRepository.addTodo(todo).map(_ => Redirect(routes.TodoListController.index()))
+      }
+    )
+  }
+
+  private def renderTodoList(form: Form[TodoAddData])(implicit req: Request[AnyContent]) = {
     val todosFuture      = todoRepository.getAllJoined()
     val categoriesFuture = todoRepository.getAllCategories()
     for {
