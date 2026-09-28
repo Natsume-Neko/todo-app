@@ -1,7 +1,13 @@
 @import lib.model.Todo.State._
 @import lib.model.TodoCategory.Color._
-@(vv: model.ViewValueTodoList)
+@(vv: model.ViewValueTodoList)(implicit messages: Messages)
 @common.Default(vv){
+  @helper.form(action = routes.TodoListController.create()) {
+    @helper.inputText(vv.form("title"), Symbol("_label") -> "タイトル")
+    @helper.textarea(vv.form("body"), Symbol("_label") -> "本文")
+    @helper.select(vv.form("categoryId"), vv.categories, Symbol("_label") -> "カテゴリ")
+    <button type="submit">作成</button>
+  }
   <table>
     <thead>
       <tr><th>タイトル</th><th>本文</th><th>ステータス</th><th>カテゴリ</th></tr>

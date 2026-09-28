@@ -10,12 +10,14 @@ import play.api.data.Form
 import model.TodoAddData
 import lib.model.Todo
 import lib.model.TodoCategory
+import play.api.i18n.I18nSupport
 
 @Singleton
 class TodoListController @Inject() (
   val controllerComponents: ControllerComponents,
   todoRepository:           TodoRepository,
-)(implicit ec:              scala.concurrent.ExecutionContext) extends BaseController {
+)(implicit ec:              scala.concurrent.ExecutionContext)
+  extends BaseController with I18nSupport {
 
   def index() = Action.async { implicit req =>
     renderTodoList(TodoForm.create).map(Ok(_))
