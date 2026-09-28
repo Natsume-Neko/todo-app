@@ -14,17 +14,17 @@ class TodoListController @Inject() (
 
   def index() = Action.async { implicit req =>
     todoRepository.getAllJoined().map(todos => {
-      val todosView = todos.map(todo =>
+      val todosView = todos.map { case (todo, category) =>
         ViewValueTodoItem.tupled((
           Seq("main.css"),
           Seq("main.js"),
-          todo._1.title,
-          todo._1.body,
-          todo._1.state,
-          todo._2.name,
-          todo._2.color
+          todo.title,
+          todo.body,
+          todo.state,
+          category.name,
+          category.color
         ))
-      )
+      }
       val vv        = ViewValueTodoList(
         title  = "Todo一覧",
         cssSrc = Seq("main.css"),
