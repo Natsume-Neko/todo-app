@@ -23,5 +23,10 @@ class TodoRepository @Inject() (
   val todoCategoryTable = TableQuery[TodoCategoryTable]
 
   def getAllJoined(): Future[Seq[(Todo, TodoCategory)]] =
-    slave.run(todoTable.join(todoCategoryTable).on((l, r) => l.categoryId === r.id).result)
+    slave.run(
+      todoTable
+        .join(todoCategoryTable)
+        .on((l, r) => l.categoryId === r.id)
+        .result
+    )
 }
