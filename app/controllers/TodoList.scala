@@ -61,15 +61,7 @@ class TodoListController @Inject() (
       categories <- categoriesFuture
     } yield {
       val todosView = todos.map { case (todo, category) =>
-        ViewValueTodoItem.tupled((
-          Seq("main.css"),
-          Seq("main.js"),
-          todo.title,
-          todo.body,
-          todo.state,
-          category.name,
-          category.color
-        ))
+        ViewValueTodoItem.from(todo, category)
       }
       val vv        = ViewValueTodoList(
         title      = "Todo一覧",

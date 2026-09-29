@@ -43,3 +43,9 @@ body {
 .info {
   display: none;
 }
+
+/******* カテゴリの色 *******/
+.category--blue   { background-color: #3182ce; }
+.category--green  { background-color: #2f855a; }
+.category--red    { background-color: #c53030; }
+.category--yellow { background-color: #d69e2e; }

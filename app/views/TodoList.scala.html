@@ -1,5 +1,3 @@
-@import lib.model.Todo.State._
-@import lib.model.TodoCategory.Color._
 @(vv: model.ViewValueTodoList)(implicit request: RequestHeader, messages: Messages)
 @common.Default(vv){
   @helper.form(action = routes.TodoListController.create()) {
@@ -18,23 +16,8 @@
       <tr>
         <td>@todo.title</td>
         <td>@todo.body</td>
-        <td>@{
-          todo.state match {
-            case NotBegin => "TODO"
-            case Doing    => "進行中"
-            case Done     => "完了"
-          }
-        }</td>
-        <td style="background-color: @{
-          todo.color match {
-            case Blue => "#3182ce"
-            case Green => "#2f855a"
-            case Red => "#c53030"
-            case Yellow => "#d69e2e"
-          }
-        }">
-          @todo.category_name
-        </td>
+        <td>@todo.stateLabel</td>
+        <td class="@todo.colorClass">@todo.categoryName</td>
       </tr>
     }
     </tbody>
