@@ -6,6 +6,8 @@ import play.api.data._
 import play.api.data.Forms._
 
 case class ViewValueTodoItem(
+  id:           Long,
+  categoryId:   Long,
   title:        String,
   body:         String,
   stateLabel:   String, // "TODO" / "進行中" / "完了"
@@ -16,6 +18,8 @@ case class ViewValueTodoItem(
 object ViewValueTodoItem {
   def from(todo: Todo, category: TodoCategory): ViewValueTodoItem =
     ViewValueTodoItem(
+      id           = todo.id.get,
+      categoryId   = todo.categoryId,
       title        = todo.title,
       body         = todo.body,
       stateLabel   = stateLabel(todo.state),
@@ -38,10 +42,12 @@ object ViewValueTodoItem {
 }
 
 case class ViewValueTodoList(
-  title:      String,
-  cssSrc:     Seq[String],
-  jsSrc:      Seq[String],
-  todos:      Seq[ViewValueTodoItem],
-  form:       Form[TodoAddData],
-  categories: Seq[(String, String)]
+  title:       String,
+  cssSrc:      Seq[String],
+  jsSrc:       Seq[String],
+  todos:       Seq[ViewValueTodoItem],
+  createForm:  Form[TodoAddData],
+  categories:  Seq[(String, String)],
+  editingId:   Option[Long],
+  editingForm: Form[TodoUpdateData],
 ) extends ViewValueCommon

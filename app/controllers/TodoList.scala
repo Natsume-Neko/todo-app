@@ -64,13 +64,15 @@ class TodoListController @Inject() (
         ViewValueTodoItem.from(todo, category)
       }
       val vv        = ViewValueTodoList(
-        title      = "Todo一覧",
-        cssSrc     = Seq("main.css"),
-        jsSrc      = Seq("main.js"),
-        todos      = todosView,
-        form       = form,
-        categories =
-          categories.flatMap(c => c.id.map(id => (id.toString, c.name)))
+        title       = "Todo一覧",
+        cssSrc      = Seq("main.css"),
+        jsSrc       = Seq("main.js"),
+        todos       = todosView,
+        createForm  = form,
+        categories  =
+          categories.flatMap(c => c.id.map(id => (id.toString, c.name))),
+        editingId   = None,
+        editingForm = TodoForm.edit,
       )
       views.html.TodoList(vv)
     }
