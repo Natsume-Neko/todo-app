@@ -24,22 +24,36 @@ class TodoListController @Inject() (
   }
 
   def create() = Action.async { implicit req =>
-    TodoForm.create.bindFromRequest().fold(
+    val boundForm = TodoForm.create.bindFromRequest()
+    boundForm.fold(
       formWithError => renderTodoList(formWithError).map(BadRequest(_)),
       formData => {
-        val todo = Todo(
-          None,
-          TodoCategory.Id(formData.categoryId),
-          formData.title,
-          formData.body,
-          Todo.State.NotBegin,
-        ).toWithNoId
-        todoRepository.addTodo(todo).map(_ => Redirect(routes.TodoListController.index()))
+        val categoryId = TodoCategory.Id(formData.categoryId)
+        todoRepository.getCategoryById(categoryId).flatMap {
+          case Some(_) => {
+            val todo = Todo(
+              None,
+              categoryId,
+              formData.title,
+              formData.body,
+              Todo.State.NotBegin,
+            ).toWithNoId
+            todoRepository.addTodo(todo).map(_ =>
+              Redirect(routes.TodoListController.index())
+            )
+          }
+          case None    => renderTodoList(boundForm.withError(
+              "categoryId",
+              "error.category.notFound"
+            )).map(BadRequest(_))
+        }
       }
     )
   }
 
-  private def renderTodoList(form: Form[TodoAddData])(implicit req: Request[AnyContent]) = {
+  private def renderTodoList(form: Form[TodoAddData])(implicit
+    req:                           Request[AnyContent]
+  ) = {
     val todosFuture      = todoRepository.getAllJoined()
     val categoriesFuture = todoRepository.getAllCategories()
     for {
@@ -63,7 +77,8 @@ class TodoListController @Inject() (
         jsSrc      = Seq("main.js"),
         todos      = todosView,
         form       = form,
-        categories = categories.flatMap(c => c.id.map(id => (id.toString, c.name)))
+        categories =
+          categories.flatMap(c => c.id.map(id => (id.toString, c.name)))
       )
       views.html.TodoList(vv)
     }
