@@ -39,15 +39,19 @@ object ViewValueTodoItem {
     case TodoCategory.Color.Red    => "category--red"
     case TodoCategory.Color.Yellow => "category--yellow"
   }
+
+  val stateOptions: Seq[(String, String)] =
+    Todo.State.values.map(s => (s.code.toString(), stateLabel(s)))
 }
 
 case class ViewValueTodoList(
-  title:       String,
-  cssSrc:      Seq[String],
-  jsSrc:       Seq[String],
-  todos:       Seq[ViewValueTodoItem],
-  createForm:  Form[TodoAddData],
-  categories:  Seq[(String, String)],
-  editingId:   Option[Long],
-  editingForm: Form[TodoUpdateData],
+  title:        String,
+  cssSrc:       Seq[String],
+  jsSrc:        Seq[String],
+  todos:        Seq[ViewValueTodoItem],
+  createForm:   Form[TodoAddData],
+  categories:   Seq[(String, String)],
+  stateOptions: Seq[(String, String)],
+  editingId:    Option[Long],
+  editingForm:  Form[TodoUpdateData],
 ) extends ViewValueCommon
