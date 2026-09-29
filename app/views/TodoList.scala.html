@@ -13,12 +13,69 @@
     </thead>
     <tbody>
     @for(todo <- vv.todos) {
-      <tr>
-        <td>@todo.title</td>
-        <td>@todo.body</td>
-        <td>@todo.stateLabel</td>
-        <td class="@todo.colorClass">@todo.categoryName</td>
-      </tr>
+      @if(vv.editingId.contains(todo.id)) {
+        <tr>
+          <td>
+            @helper.inputText(
+              vv.editingForm("title"),
+              Symbol("form") -> "edit-form",
+              Symbol("id") -> "edit_title",
+              Symbol("_label") -> "",
+            )
+          </td>
+          <td>
+            @helper.textarea(
+              vv.editingForm("body"),
+              Symbol("form") -> "edit-form",
+              Symbol("id") -> "edit_body",
+              Symbol("_label") -> "",
+            )
+          </td>
+          <td>
+            @helper.select(
+              vv.editingForm("state"),
+              vv.stateOptions,
+              Symbol("form") -> "edit-form",
+              Symbol("id") -> "edit_state",
+              Symbol("_label") -> "",
+            )
+          </td>
+          <td>
+            @helper.select(
+              vv.editingForm("categoryId"),
+              vv.categories,
+              Symbol("form") -> "edit-form",
+              Symbol("id") -> "edit_categoryId",
+              Symbol("_label") -> "",
+            )
+          </td>
+          <td>
+            @helper.form(action = routes.TodoListController.edit(todo.id), Symbol("id") -> "edit-form") {
+              @helper.CSRF.formField
+              <button type="submit">確認</button>
+            }
+            <a href="@routes.TodoListController.index()">キャンセル</a>
+          </td>
+        </tr>
+      } else {
+        <tr>
+          <td>@todo.title</td>
+          <td>@todo.body</td>
+          <td>@todo.stateLabel</td>
+          <td class="@todo.colorClass">@todo.categoryName</td>
+          <td>
+            <a href="@routes.TodoListController.index(Some(todo.id))">
+              更新
+            </a>
+            @helper.form(action = routes.TodoListController.delete(todo.id)) {
+              @helper.CSRF.formField
+              <button type="submit" onclick="return confirm('削除しますか？')">
+                削除
+              </button>
+            }
+          </td>
+        </tr>
+      }
     }
     </tbody>
   </table>
