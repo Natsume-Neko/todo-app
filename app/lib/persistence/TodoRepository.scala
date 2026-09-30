@@ -61,4 +61,22 @@ class TodoRepository @Inject() (
     master.run(
       (todoCategoryTable returning todoCategoryTable.map(_.id)) += category.v
     )
+
+  def editCategory(
+    id:    TodoCategory.Id,
+    name:  String,
+    slug:  String,
+    color: TodoCategory.Color
+  ): Future[Int] = {
+    master.run(
+      todoCategoryTable
+        .filter(_.id === id)
+        .map(c => (c.name, c.slug, c.color))
+        .update((name, slug, color))
+    )
+  }
+
+  def deleteCategory(id: TodoCategory.Id): Future[Int] = {
+    master.run(todoCategoryTable.filter(_.id === id).delete)
+  }
 }
