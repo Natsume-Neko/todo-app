@@ -53,7 +53,7 @@ class TodoRepository @Inject() (
 
   def getAllCategories(): Future[Seq[TodoCategory]] =
     slave.run(todoCategoryTable.result)
-  
+
   def getCategoryById(categoryId: TodoCategory.Id): Future[Option[TodoCategory]] =
     slave.run(todoCategoryTable.filter(_.id === categoryId).result.headOption)
 }
