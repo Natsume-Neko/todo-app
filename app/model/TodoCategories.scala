@@ -2,6 +2,8 @@ package model
 
 import lib.model.TodoCategory
 import model.Utils.colorClass
+import play.api.data._
+import play.api.data.Forms._
 
 case class ViewValueCategoryItem(
   id:         Long,
@@ -18,11 +20,15 @@ object ViewValueCategoryItem {
       slug       = category.slug,
       colorClass = colorClass(category.color),
     )
+
+  val colorOptions = TodoCategory.Color.values.map(c => (c.code.toString(), colorClass(c)))
 }
 
 case class ViewValueCategories(
-  title:      String,
-  cssSrc:     Seq[String],
-  jsSrc:      Seq[String],
-  categories: Seq[ViewValueCategoryItem],
+  title:        String,
+  cssSrc:       Seq[String],
+  jsSrc:        Seq[String],
+  categories:   Seq[ViewValueCategoryItem],
+  createForm:   Form[CategoryAddData],
+  colorOptions: Seq[(String, String)],
 ) extends ViewValueCommon
