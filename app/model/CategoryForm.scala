@@ -5,6 +5,7 @@ import play.api.data.Forms._
 import lib.model.TodoCategory
 
 case class CategoryAddData(name: String, slug: String, color: Short)
+case class CategoryEditData(name: String, slug: String, color: Short)
 
 object CategoryForm {
   private val nameConstraint = nonEmptyText(maxLength = 255)
@@ -31,5 +32,13 @@ object CategoryForm {
       "slug"  -> slugConstraint,
       "color" -> colorConstraint,
     )(CategoryAddData.apply)(CategoryAddData.unapply)
+  )
+
+  val edit: Form[CategoryEditData] = Form(
+    mapping(
+      "name"  -> nameConstraint,
+      "slug"  -> slugConstraint,
+      "color" -> colorConstraint,
+    )(CategoryEditData.apply)(CategoryEditData.unapply)
   )
 }

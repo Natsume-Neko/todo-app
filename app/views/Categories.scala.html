@@ -22,15 +22,63 @@
   }
   <table>
     <thead>
-      <tr><th>カテゴリ名</th><th>slug</th><th>カラー</th></tr>
+      <tr><th>カテゴリ名</th><th>slug</th><th>カラー</th><th>操作</th></tr>
     </thead>
     <tbody>
       @for(category <- vv.categories) {
-        <tr>
-          <td>@category.name</td>
-          <td>@category.slug</td>
-          <td class="color-swatch @category.colorClass"></td>
-        </tr>
+        @if(vv.editingId.contains(category.id)) {
+          <tr>
+            <td>
+              @helper.inputText(
+                vv.editingForm("name"),
+                Symbol("form") -> "edit-form",
+                Symbol("id") -> "edit_name",
+                Symbol("_label") -> "",
+              )
+            </td>
+            <td>
+              @helper.inputText(
+                vv.editingForm("slug"),
+                Symbol("form") -> "edit-form",
+                Symbol("id") -> "edit_slug",
+                Symbol("_label") -> "",
+              )
+            </td>
+            <td>
+              @helper.select(
+                vv.editingForm("color"),
+                vv.colorOptions,
+                Symbol("form") -> "edit-form",
+                Symbol("id") -> "edit_color",
+                Symbol("_label") -> "",
+              )
+            </td>
+            <td>
+              @helper.form(action = routes.TodoCategoryController.edit(category.id), Symbol("id") -> "edit-form") {
+                @helper.CSRF.formField
+                <button type="submit">確認</button>
+              }
+              <a href="@routes.TodoCategoryController.index()">キャンセル</a>
+            </td>
+          </tr>
+        } else {
+          <tr>
+            <td>@category.name</td>
+            <td>@category.slug</td>
+            <td class="color-swatch @category.colorClass"></td>
+            <td>
+              <a href="@routes.TodoCategoryController.index(Some(category.id))">
+                更新
+              </a>
+              @helper.form(action = routes.TodoCategoryController.delete(category.id)) {
+                @helper.CSRF.formField
+                <button type="submit" onclick="return confirm('削除しますか？')">
+                  削除
+                </button>
+              }
+            </td>
+          </tr>
+        }
       }
     </tbody>
   </table>
