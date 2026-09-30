@@ -29,4 +29,13 @@ class TodoRepository @Inject() (
         .on((l, r) => l.categoryId === r.id)
         .result
     )
+
+  def addTodo(todo: Todo#WithNoId): Future[Todo.Id] =
+    master.run((todoTable returning todoTable.map(_.id)) += todo.v)
+
+  def getAllCategories(): Future[Seq[TodoCategory]] =
+    slave.run(todoCategoryTable.result)
+  
+  def getCategoryById(categoryId: TodoCategory.Id): Future[Option[TodoCategory]] =
+    slave.run(todoCategoryTable.filter(_.id === categoryId).result.headOption)
 }
