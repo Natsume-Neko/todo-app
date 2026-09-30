@@ -16,3 +16,5 @@ POST    /todo-list                  controllers.TodoListController.create()
 POST    /todo-list/:id/edit         controllers.TodoListController.edit(id: Long)
 
 POST    /todo-list/:id/delete       controllers.TodoListController.delete(id: Long)
+
+GET     /categories                 controllers.TodoCategoryController.index()

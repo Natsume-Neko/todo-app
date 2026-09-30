@@ -1,0 +1,17 @@
+@(vv: model.ViewValueCategories)
+@common.Default(vv) {
+  <table>
+    <thead>
+      <tr><th>カテゴリ名</th><th>slug</th><th>色</th></tr>
+    </thead>
+    <tbody>
+      @for(category <- vv.categories) {
+        <tr>
+          <td>@category.name</td>
+          <td>@category.slug</td>
+          <td class="@category.colorClass">カラー</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
