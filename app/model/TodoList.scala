@@ -4,6 +4,8 @@ import lib.model.Todo
 import lib.model.TodoCategory
 import play.api.data._
 import play.api.data.Forms._
+import model.Utils.colorClass
+import model.Utils.stateLabel
 
 case class ViewValueTodoItem(
   id:           Long,
@@ -26,19 +28,6 @@ object ViewValueTodoItem {
       categoryName = category.name,
       colorClass   = colorClass(category.color),
     )
-
-  private def stateLabel(state: Todo.State): String = state match {
-    case Todo.State.NotBegin => "TODO"
-    case Todo.State.Doing    => "進行中"
-    case Todo.State.Done     => "完了"
-  }
-
-  private def colorClass(color: TodoCategory.Color): String = color match {
-    case TodoCategory.Color.Blue   => "category--blue"
-    case TodoCategory.Color.Green  => "category--green"
-    case TodoCategory.Color.Red    => "category--red"
-    case TodoCategory.Color.Yellow => "category--yellow"
-  }
 
   val stateOptions: Seq[(String, String)] =
     Todo.State.values.map(s => (s.code.toString(), stateLabel(s)))
