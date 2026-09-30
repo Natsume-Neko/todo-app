@@ -79,4 +79,8 @@ class TodoRepository @Inject() (
   def deleteCategory(id: TodoCategory.Id): Future[Int] = {
     master.run(todoCategoryTable.filter(_.id === id).delete)
   }
+
+  def deleteTodoWithCategoryId(id: TodoCategory.Id): Future[Int] = {
+    master.run(todoTable.filter(_.categoryId === id).delete)
+  }
 }
