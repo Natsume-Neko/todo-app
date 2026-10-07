@@ -75,7 +75,7 @@
               </a>
               @helper.form(action = routes.TodoCategoryController.delete(category.id)) {
                 @helper.CSRF.formField
-                <button type="submit" onclick="return confirm('削除しますか？')">
+                <button type="submit" onclick="return confirm('このカテゴリの Todo もすべて削除されます。削除しますか？')">
                   削除
                 </button>
               }
