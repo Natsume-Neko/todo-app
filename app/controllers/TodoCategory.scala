@@ -66,12 +66,10 @@ class TodoCategoryController @Inject() (
   }
 
   def delete(id: Long) = Action.async { implicit req =>
-    todoRepository.deleteTodoWithCategoryId(TodoCategory.Id(id)).flatMap(_ =>
-      todoRepository.deleteCategory(TodoCategory.Id(id)).map {
-        case 0 => NotFound
-        case _ => Redirect(routes.TodoCategoryController.index())
-      }
-    )
+    todoRepository.deleteCategoryWithTodos(TodoCategory.Id(id)).map {
+      case 0 => NotFound
+      case _ => Redirect(routes.TodoCategoryController.index())
+    }
   }
 
   private def renderCategories(

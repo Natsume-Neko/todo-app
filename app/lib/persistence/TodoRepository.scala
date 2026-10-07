@@ -76,11 +76,12 @@ class TodoRepository @Inject() (
     )
   }
 
-  def deleteCategory(id: TodoCategory.Id): Future[Int] = {
-    master.run(todoCategoryTable.filter(_.id === id).delete)
-  }
-
-  def deleteTodoWithCategoryId(id: TodoCategory.Id): Future[Int] = {
-    master.run(todoTable.filter(_.categoryId === id).delete)
+  def deleteCategoryWithTodos(id: TodoCategory.Id): Future[Int] = {
+    master.run(
+      (for {
+        _ <- todoTable.filter(_.categoryId === id).delete
+        n <- todoCategoryTable.filter(_.id === id).delete
+      } yield n).transactionally
+    )
   }
 }
