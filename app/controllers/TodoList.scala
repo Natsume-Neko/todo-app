@@ -12,11 +12,13 @@ import lib.model.Todo
 import lib.model.TodoCategory
 import play.api.i18n.I18nSupport
 import model.TodoUpdateData
+import lib.persistence.TodoCategoryRepository
 
 @Singleton
 class TodoListController @Inject() (
   val controllerComponents: ControllerComponents,
   todoRepository:           TodoRepository,
+  todoCategoryRepository:   TodoCategoryRepository,
 )(implicit ec:              scala.concurrent.ExecutionContext)
   extends BaseController with I18nSupport {
 
@@ -35,7 +37,7 @@ class TodoListController @Inject() (
         ).map(BadRequest(_)),
       formData => {
         val categoryId = TodoCategory.Id(formData.categoryId)
-        todoRepository.getCategoryById(categoryId).flatMap {
+        todoCategoryRepository.getCategoryById(categoryId).flatMap {
           case Some(_) => {
             val todo = Todo(
               None,
@@ -72,7 +74,7 @@ class TodoListController @Inject() (
         ).map(BadRequest(_)),
       formData => {
         val categoryId = TodoCategory.Id(formData.categoryId)
-        todoRepository.getCategoryById(categoryId).flatMap {
+        todoCategoryRepository.getCategoryById(categoryId).flatMap {
           case Some(_) => todoRepository.editTodo(
               Todo.Id(id),
               categoryId,
@@ -110,7 +112,7 @@ class TodoListController @Inject() (
     editingFormOpt: Option[Form[TodoUpdateData]],
   )(implicit req:   Request[AnyContent]) = {
     val todosFuture      = todoRepository.getAllJoined()
-    val categoriesFuture = todoRepository.getAllCategories()
+    val categoriesFuture = todoCategoryRepository.getAllCategories()
     for {
       todos      <- todosFuture
       categories <- categoriesFuture

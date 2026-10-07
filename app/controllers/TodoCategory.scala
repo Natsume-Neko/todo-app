@@ -1,6 +1,6 @@
 package controllers
 
-import lib.persistence.TodoRepository
+import lib.persistence.TodoCategoryRepository
 import javax.inject._
 import play.api.mvc._
 import scala.concurrent.ExecutionContext
@@ -16,7 +16,7 @@ import model.CategoryEditData
 @Singleton
 class TodoCategoryController @Inject() (
   val controllerComponents: ControllerComponents,
-  todoRepository:           TodoRepository,
+  todoCategoryRepository:   TodoCategoryRepository,
 )(implicit ec:              ExecutionContext)
   extends BaseController with I18nSupport {
 
@@ -37,7 +37,7 @@ class TodoCategoryController @Inject() (
           TodoCategory.Color(formData.color),
         ).toWithNoId
 
-        todoRepository.addCategory(category).map(_ => Redirect(routes.TodoCategoryController.index()))
+        todoCategoryRepository.addCategory(category).map(_ => Redirect(routes.TodoCategoryController.index()))
       }
     )
   }
@@ -52,7 +52,7 @@ class TodoCategoryController @Inject() (
           Some(formWithError)
         ).map(BadRequest(_)),
       formData => {
-        todoRepository.editCategory(
+        todoCategoryRepository.editCategory(
           TodoCategory.Id(id),
           formData.name,
           formData.slug,
@@ -66,7 +66,7 @@ class TodoCategoryController @Inject() (
   }
 
   def delete(id: Long) = Action.async { implicit req =>
-    todoRepository.deleteCategoryWithTodos(TodoCategory.Id(id)).map {
+    todoCategoryRepository.deleteCategoryWithTodos(TodoCategory.Id(id)).map {
       case 0 => NotFound
       case _ => Redirect(routes.TodoCategoryController.index())
     }
@@ -77,7 +77,7 @@ class TodoCategoryController @Inject() (
     editingId:      Option[Long],
     editingFormOpt: Option[Form[CategoryEditData]],
   )(implicit req:   Request[AnyContent]) = {
-    val categoriesFuture = todoRepository.getAllCategories()
+    val categoriesFuture = todoCategoryRepository.getAllCategories()
     categoriesFuture.map(categories => {
       val categoriesView = categories.map(ViewValueCategoryItem.from(_))
       val editingForm    = editingFormOpt.getOrElse(

@@ -50,38 +50,4 @@ class TodoRepository @Inject() (
 
   def deleteTodo(id: Todo.Id): Future[Int] =
     master.run(todoTable.filter(_.id === id).delete)
-
-  def getAllCategories(): Future[Seq[TodoCategory]] =
-    slave.run(todoCategoryTable.result)
-
-  def getCategoryById(categoryId: TodoCategory.Id): Future[Option[TodoCategory]] =
-    slave.run(todoCategoryTable.filter(_.id === categoryId).result.headOption)
-
-  def addCategory(category: TodoCategory#WithNoId): Future[TodoCategory.Id] =
-    master.run(
-      (todoCategoryTable returning todoCategoryTable.map(_.id)) += category.v
-    )
-
-  def editCategory(
-    id:    TodoCategory.Id,
-    name:  String,
-    slug:  String,
-    color: TodoCategory.Color
-  ): Future[Int] = {
-    master.run(
-      todoCategoryTable
-        .filter(_.id === id)
-        .map(c => (c.name, c.slug, c.color))
-        .update((name, slug, color))
-    )
-  }
-
-  def deleteCategoryWithTodos(id: TodoCategory.Id): Future[Int] = {
-    master.run(
-      (for {
-        _ <- todoTable.filter(_.categoryId === id).delete
-        n <- todoCategoryTable.filter(_.id === id).delete
-      } yield n).transactionally
-    )
-  }
 }
