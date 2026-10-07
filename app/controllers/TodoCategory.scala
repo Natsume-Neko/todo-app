@@ -36,7 +36,9 @@ class TodoCategoryController @Inject() (
           TodoCategory.Color(formData.color),
         ).toWithNoId
 
-        todoCategoryRepository.addCategory(category).map(_ => Redirect(routes.TodoCategoryController.index()))
+        todoCategoryRepository
+          .addCategory(category)
+          .map(_ => Redirect(routes.TodoCategoryController.index()))
       }
     )
   }
