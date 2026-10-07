@@ -38,6 +38,9 @@ body {
   text-align:  center;
 }
 
+.todo-body { 
+  white-space: pre-wrap; 
+}
 
 /******* フォームのinfoを非表示に *******/
 .info {
