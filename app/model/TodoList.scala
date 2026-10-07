@@ -4,8 +4,8 @@ import lib.model.Todo
 import lib.model.TodoCategory
 import play.api.data._
 import play.api.data.Forms._
-import model.Utils.colorClass
-import model.Utils.stateLabel
+import model.ViewLabels.colorClass
+import model.ViewLabels.stateLabel
 
 case class ViewValueTodoItem(
   id:           Long,

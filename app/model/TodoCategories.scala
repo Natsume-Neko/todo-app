@@ -1,7 +1,7 @@
 package model
 
 import lib.model.TodoCategory
-import model.Utils.colorClass
+import model.ViewLabels.colorClass
 import play.api.data._
 import play.api.data.Forms._
 

@@ -3,7 +3,7 @@ package model
 import lib.model.TodoCategory
 import lib.model.Todo
 
-object Utils {
+object ViewLabels {
   def colorClass(color: TodoCategory.Color): String = color match {
     case TodoCategory.Color.Blue   => "category--blue"
     case TodoCategory.Color.Green  => "category--green"
