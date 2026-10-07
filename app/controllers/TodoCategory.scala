@@ -8,10 +8,9 @@ import model.ViewValueCategoryItem
 import model.ViewValueCategories
 import model.CategoryForm
 import play.api.data.Form
-import model.CategoryAddData
+import model.CategoryData
 import lib.model.TodoCategory
 import play.api.i18n.I18nSupport
-import model.CategoryEditData
 
 @Singleton
 class TodoCategoryController @Inject() (
@@ -73,9 +72,9 @@ class TodoCategoryController @Inject() (
   }
 
   private def renderCategories(
-    createForm:     Form[CategoryAddData],
+    createForm:     Form[CategoryData],
     editingId:      Option[Long],
-    editingFormOpt: Option[Form[CategoryEditData]],
+    editingFormOpt: Option[Form[CategoryData]],
   )(implicit req:   Request[AnyContent]) = {
     val categoriesFuture = todoCategoryRepository.getAllCategories()
     categoriesFuture.map(categories => {
@@ -85,7 +84,7 @@ class TodoCategoryController @Inject() (
           .flatMap(id => categories.find(_.id.contains(id)))
           .map(c =>
             CategoryForm.edit.fill(
-              CategoryEditData(c.name, c.slug, c.color.code)
+              CategoryData(c.name, c.slug, c.color.code)
             )
           ).getOrElse(CategoryForm.edit)
       )

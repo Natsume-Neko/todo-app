@@ -4,8 +4,7 @@ import play.api.data._
 import play.api.data.Forms._
 import lib.model.TodoCategory
 
-case class CategoryAddData(name: String, slug: String, color: Short)
-case class CategoryEditData(name: String, slug: String, color: Short)
+case class CategoryData(name: String, slug: String, color: Short)
 
 object CategoryForm {
   private val nameConstraint = nonEmptyText(maxLength = 255)
@@ -26,19 +25,19 @@ object CategoryForm {
       color => TodoCategory.Color.values.exists(_.code == color),
     )
 
-  val create: Form[CategoryAddData] = Form(
+  val create: Form[CategoryData] = Form(
     mapping(
       "name"  -> nameConstraint,
       "slug"  -> slugConstraint,
       "color" -> colorConstraint,
-    )(CategoryAddData.apply)(CategoryAddData.unapply)
+    )(CategoryData.apply)(CategoryData.unapply)
   )
 
-  val edit: Form[CategoryEditData] = Form(
+  val edit: Form[CategoryData] = Form(
     mapping(
       "name"  -> nameConstraint,
       "slug"  -> slugConstraint,
       "color" -> colorConstraint,
-    )(CategoryEditData.apply)(CategoryEditData.unapply)
+    )(CategoryData.apply)(CategoryData.unapply)
   )
 }

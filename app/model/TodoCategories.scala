@@ -29,8 +29,8 @@ case class ViewValueCategories(
   cssSrc:       Seq[String],
   jsSrc:        Seq[String],
   categories:   Seq[ViewValueCategoryItem],
-  createForm:   Form[CategoryAddData],
+  createForm:   Form[CategoryData],
   colorOptions: Seq[(String, String)],
   editingId:    Option[Long],
-  editingForm:  Form[CategoryEditData],
+  editingForm:  Form[CategoryData],
 ) extends ViewValueCommon
