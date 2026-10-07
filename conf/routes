@@ -4,11 +4,23 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                             controllers.HomeController.index()
+GET     /                           controllers.HomeController.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /todo-list                  controllers.TodoListController.index()
+GET     /todo-list                  controllers.TodoListController.index(edit: Option[Long] ?= None)
 
 POST    /todo-list                  controllers.TodoListController.create()
+
+POST    /todo-list/:id/edit         controllers.TodoListController.edit(id: Long)
+
+POST    /todo-list/:id/delete       controllers.TodoListController.delete(id: Long)
+
+GET     /categories                 controllers.TodoCategoryController.index(edit: Option[Long] ?= None)
+
+POST    /categories                 controllers.TodoCategoryController.create()
+
+POST    /categories/:id/edit        controllers.TodoCategoryController.edit(id: Long)
+
+POST    /categories/:id/delete      controllers.TodoCategoryController.delete(id: Long)

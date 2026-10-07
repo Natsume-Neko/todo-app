@@ -33,9 +33,21 @@ class TodoRepository @Inject() (
   def addTodo(todo: Todo#WithNoId): Future[Todo.Id] =
     master.run((todoTable returning todoTable.map(_.id)) += todo.v)
 
-  def getAllCategories(): Future[Seq[TodoCategory]] =
-    slave.run(todoCategoryTable.result)
-  
-  def getCategoryById(categoryId: TodoCategory.Id): Future[Option[TodoCategory]] =
-    slave.run(todoCategoryTable.filter(_.id === categoryId).result.headOption)
+  def editTodo(
+    id:         Todo.Id,
+    categoryId: TodoCategory.Id,
+    title:      String,
+    body:       String,
+    state:      Todo.State,
+  ): Future[Int] = {
+    master.run(
+      todoTable
+        .filter(_.id === id)
+        .map(t => (t.categoryId, t.title, t.body, t.state))
+        .update((categoryId, title, body, state))
+    )
+  }
+
+  def deleteTodo(id: Todo.Id): Future[Int] =
+    master.run(todoTable.filter(_.id === id).delete)
 }

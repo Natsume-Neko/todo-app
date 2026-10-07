@@ -1,1 +1,16 @@
 # https://www.playframework.com/documentation/latest/ScalaI18N
+
+# Play標準のバリデーションエラー
+error.required=入力必須項目です
+error.maxLength={0}文字以内で入力してください
+error.number=数値を入力してください
+
+# Todo
+error.title.newline=タイトルに改行は入れられません
+error.state.invalid=ステータスの値が正しくありません
+error.category.notFound=選んだカテゴリが見つかりません
+
+# Category
+error.name.newline=カテゴリ名に改行は入れられません
+error.slug.alphanumeric=スラッグは半角英数字のみで入力してください
+error.color.invalid=カラーの値が正しくありません

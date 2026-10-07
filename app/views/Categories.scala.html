@@ -1,0 +1,88 @@
+@(vv: model.ViewValueCategories)(implicit request: RequestHeader, messages: Messages)
+@common.Default(vv) {
+  @helper.form(action = routes.TodoCategoryController.create()) {
+    @helper.CSRF.formField
+    @helper.inputText(vv.createForm("name"), Symbol("_label") -> "カテゴリ名")
+    @helper.inputText(vv.createForm("slug"), Symbol("_label") -> "Slug")
+    <fieldset>
+      <legend>カラー</legend>
+      @for((code, cls) <- vv.colorOptions) {
+        <label class="color-choice">
+          <input type="radio" name="color" value="@code"
+                @if(vv.createForm("color").value.contains(code)){checked}>
+          <span class="color-swatch @cls"></span>
+        </label>
+      }
+    @for(error <- vv.createForm("color").errors) {
+      <p class="error">@error.format</p>
+    }
+    </fieldset>
+
+    <button type="submit">作成</button>
+  }
+  <table>
+    <thead>
+      <tr><th>カテゴリ名</th><th>slug</th><th>カラー</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+      @for(category <- vv.categories) {
+        @if(vv.editingId.contains(category.id)) {
+          <tr>
+            <td>
+              @helper.inputText(
+                vv.editingForm("name"),
+                Symbol("form") -> "edit-form",
+                Symbol("id") -> "edit_name",
+                Symbol("_label") -> "",
+              )
+            </td>
+            <td>
+              @helper.inputText(
+                vv.editingForm("slug"),
+                Symbol("form") -> "edit-form",
+                Symbol("id") -> "edit_slug",
+                Symbol("_label") -> "",
+              )
+            </td>
+            <td>
+              @for((code, cls) <- vv.colorOptions) {
+                <label class="color-choice">
+                  <input type="radio" name="color" form="edit-form"
+                        @if(vv.editingForm("color").value.contains(code)){checked}>
+                  <span class="color-swatch @cls"></span>
+                </label>
+              }
+              @for(error <- vv.editingForm("color").errors) {
+                <p class="error">@error.format</p>
+              }
+            </td>
+            <td>
+              @helper.form(action = routes.TodoCategoryController.edit(category.id), Symbol("id") -> "edit-form") {
+                @helper.CSRF.formField
+                <button type="submit">確認</button>
+              }
+              <a href="@routes.TodoCategoryController.index()">キャンセル</a>
+            </td>
+          </tr>
+        } else {
+          <tr>
+            <td>@category.name</td>
+            <td>@category.slug</td>
+            <td><span class="color-swatch @category.colorClass"></span></td>
+            <td>
+              <a href="@routes.TodoCategoryController.index(Some(category.id))">
+                更新
+              </a>
+              @helper.form(action = routes.TodoCategoryController.delete(category.id)) {
+                @helper.CSRF.formField
+                <button type="submit" onclick="return confirm('このカテゴリの Todo もすべて削除されます。削除しますか？')">
+                  削除
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+}
