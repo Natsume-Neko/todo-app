@@ -11,6 +11,7 @@ import model.TodoAddData
 import lib.model.Todo
 import lib.model.TodoCategory
 import play.api.i18n.I18nSupport
+import model.TodoUpdateData
 
 @Singleton
 class TodoListController @Inject() (
@@ -19,14 +20,19 @@ class TodoListController @Inject() (
 )(implicit ec:              scala.concurrent.ExecutionContext)
   extends BaseController with I18nSupport {
 
-  def index() = Action.async { implicit req =>
-    renderTodoList(TodoForm.create).map(Ok(_))
+  def index(edit: Option[Long] = None) = Action.async { implicit req =>
+    renderTodoList(TodoForm.create, edit, None).map(Ok(_))
   }
 
   def create() = Action.async { implicit req =>
     val boundForm = TodoForm.create.bindFromRequest()
     boundForm.fold(
-      formWithError => renderTodoList(formWithError).map(BadRequest(_)),
+      formWithError =>
+        renderTodoList(
+          formWithError,
+          None,
+          None,
+        ).map(BadRequest(_)),
       formData => {
         val categoryId = TodoCategory.Id(formData.categoryId)
         todoRepository.getCategoryById(categoryId).flatMap {
@@ -42,18 +48,67 @@ class TodoListController @Inject() (
               Redirect(routes.TodoListController.index())
             )
           }
-          case None    => renderTodoList(boundForm.withError(
-              "categoryId",
-              "error.category.notFound"
-            )).map(BadRequest(_))
+          case None    => renderTodoList(
+              boundForm.withError(
+                "categoryId",
+                "error.category.notFound"
+              ),
+              None,
+              None,
+            ).map(BadRequest(_))
         }
       }
     )
   }
 
-  private def renderTodoList(form: Form[TodoAddData])(implicit
-    req:                           Request[AnyContent]
-  ) = {
+  def edit(id: Long) = Action.async { implicit req =>
+    val editingForm = TodoForm.edit.bindFromRequest()
+    editingForm.fold(
+      formWithError =>
+        renderTodoList(
+          TodoForm.create,
+          Some(id),
+          Some(formWithError),
+        ).map(BadRequest(_)),
+      formData => {
+        val categoryId = TodoCategory.Id(formData.categoryId)
+        todoRepository.getCategoryById(categoryId).flatMap {
+          case Some(_) => todoRepository.editTodo(
+              Todo.Id(id),
+              categoryId,
+              formData.title,
+              formData.body,
+              Todo.State(formData.state),
+            ).map {
+              case 0 => NotFound
+              case _ => Redirect(routes.TodoListController.index())
+            }
+
+          case None => renderTodoList(
+              TodoForm.create,
+              Some(id),
+              Some(editingForm.withError(
+                "categoryId",
+                "error.category.notFound"
+              )),
+            ).map(BadRequest(_))
+        }
+      }
+    )
+  }
+
+  def delete(id: Long) = Action.async { implicit req =>
+    todoRepository.deleteTodo(Todo.Id(id)).map {
+      case 0 => NotFound
+      case _ => Redirect(routes.TodoListController.index())
+    }
+  }
+
+  private def renderTodoList(
+    createForm:     Form[TodoAddData],
+    editingId:      Option[Long],
+    editingFormOpt: Option[Form[TodoUpdateData]],
+  )(implicit req:   Request[AnyContent]) = {
     val todosFuture      = todoRepository.getAllJoined()
     val categoriesFuture = todoRepository.getAllCategories()
     for {
@@ -61,24 +116,30 @@ class TodoListController @Inject() (
       categories <- categoriesFuture
     } yield {
       val todosView = todos.map { case (todo, category) =>
-        ViewValueTodoItem.tupled((
-          Seq("main.css"),
-          Seq("main.js"),
-          todo.title,
-          todo.body,
-          todo.state,
-          category.name,
-          category.color
-        ))
+        ViewValueTodoItem.from(todo.toEmbeddedId, category)
       }
-      val vv        = ViewValueTodoList(
-        title      = "Todo一覧",
-        cssSrc     = Seq("main.css"),
-        jsSrc      = Seq("main.js"),
-        todos      = todosView,
-        form       = form,
-        categories =
-          categories.flatMap(c => c.id.map(id => (id.toString, c.name)))
+
+      val editingForm = editingFormOpt.getOrElse(
+        editingId
+          .flatMap(id => todos.find { case (t, _) => t.id.contains(id) })
+          .map { case (t, _) =>
+            TodoForm.edit.fill(
+              TodoUpdateData(t.categoryId, t.title, t.body, t.state.code)
+            )
+          }.getOrElse(TodoForm.edit)
+      )
+
+      val vv = ViewValueTodoList(
+        title        = "Todo一覧",
+        cssSrc       = Seq("main.css"),
+        jsSrc        = Seq("main.js"),
+        todos        = todosView,
+        createForm   = createForm,
+        stateOptions = ViewValueTodoItem.stateOptions,
+        categories   =
+          categories.flatMap(c => c.id.map(id => (id.toString, c.name))),
+        editingId    = editingId,
+        editingForm  = editingForm,
       )
       views.html.TodoList(vv)
     }
