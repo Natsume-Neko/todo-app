@@ -116,7 +116,7 @@ class TodoListController @Inject() (
       categories <- categoriesFuture
     } yield {
       val todosView = todos.map { case (todo, category) =>
-        ViewValueTodoItem.from(todo, category)
+        ViewValueTodoItem.from(todo.toEmbeddedId, category)
       }
 
       val editingForm = editingFormOpt.getOrElse(

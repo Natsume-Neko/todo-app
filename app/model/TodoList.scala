@@ -16,13 +16,13 @@ case class ViewValueTodoItem(
 )
 
 object ViewValueTodoItem {
-  def from(todo: Todo, category: TodoCategory): ViewValueTodoItem =
+  def from(todo: Todo#EmbeddedId, category: TodoCategory): ViewValueTodoItem =
     ViewValueTodoItem(
-      id           = todo.id.get,
-      categoryId   = todo.categoryId,
-      title        = todo.title,
-      body         = todo.body,
-      stateLabel   = stateLabel(todo.state),
+      id           = todo.v.id.get,
+      categoryId   = todo.v.categoryId,
+      title        = todo.v.title,
+      body         = todo.v.body,
+      stateLabel   = stateLabel(todo.v.state),
       categoryName = category.name,
       colorClass   = colorClass(category.color),
     )
