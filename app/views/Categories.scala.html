@@ -45,13 +45,16 @@
               )
             </td>
             <td>
-              @helper.select(
-                vv.editingForm("color"),
-                vv.colorOptions,
-                Symbol("form") -> "edit-form",
-                Symbol("id") -> "edit_color",
-                Symbol("_label") -> "",
-              )
+              @for((code, cls) <- vv.colorOptions) {
+                <label class="color-choice">
+                  <input type="radio" name="color" form="edit-form"
+                        @if(vv.editingForm("color").value.contains(code)){checked}>
+                  <span class="color-swatch @cls"></span>
+                </label>
+              }
+              @for(error <- vv.editingForm("color").errors) {
+                <p class="error">@error.format</p>
+              }
             </td>
             <td>
               @helper.form(action = routes.TodoCategoryController.edit(category.id), Symbol("id") -> "edit-form") {
