@@ -24,3 +24,5 @@ POST    /categories                 controllers.TodoCategoryController.create()
 POST    /categories/:id/edit        controllers.TodoCategoryController.edit(id: Long)
 
 POST    /categories/:id/delete      controllers.TodoCategoryController.delete(id: Long)
+
+GET     /api/todos                  controllers.api.TodoApiController.list()
