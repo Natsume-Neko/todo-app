@@ -1,0 +1,16 @@
+<h1>Todo一覧</h1>
+<table>
+  <thead>
+    <tr><th>タイトル</th><th>本文</th><th>ステータス</th><th>カテゴリ</th></tr>
+  </thead>
+  <tbody>
+    @for (todo of todos(); track todo.id) {
+      <tr>
+        <td>{{ todo.title }}</td>
+        <td>{{ todo.body }}</td>
+        <td>{{ todo.stateLabel }}</td>
+        <td>{{ todo.categoryName }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
