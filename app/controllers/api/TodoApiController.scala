@@ -15,13 +15,15 @@ import model.TodoUpdateData
 import lib.persistence.TodoCategoryRepository
 import play.api.libs.json._
 import model.ApiValueTodoItem
+import scala.concurrent.Future
 
 @Singleton
 class TodoApiController @Inject() (
   val controllerComponents: ControllerComponents,
   todoRepository:           TodoRepository,
+  todoCategoryRepository:   TodoCategoryRepository,
 )(implicit ec:              scala.concurrent.ExecutionContext)
-  extends BaseController {
+  extends BaseController with I18nSupport {
   implicit val todoWrites: OWrites[ApiValueTodoItem] = Json.writes[ApiValueTodoItem]
 
   def list() = Action.async { implicit req =>
@@ -32,5 +34,34 @@ class TodoApiController @Inject() (
       }
       Ok(Json.toJson(todosView))
     })
+  }
+
+  def create() = Action.async { implicit req =>
+    val boundForm = TodoForm.create.bindFromRequest()
+    boundForm.fold(
+      formWithError =>
+        Future.successful(BadRequest(formWithError.errorsAsJson)),
+      formData => {
+        val categoryId = TodoCategory.Id(formData.categoryId)
+        todoCategoryRepository.getCategoryById(categoryId).flatMap {
+          case Some(_) => {
+            val todo = Todo(
+              None,
+              categoryId,
+              formData.title,
+              formData.body,
+              Todo.State.NotBegin,
+            ).toWithNoId
+            todoRepository.addTodo(todo).map(newId =>
+              Created(Json.obj("id" -> newId.toLong))
+            )
+          }
+          case None    => Future.successful(BadRequest(boundForm.withError(
+            "categoryId",
+            "error.category.notFound"
+          ).errorsAsJson))
+        }
+      }
+    )
   }
 }
