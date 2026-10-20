@@ -1,0 +1,68 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+
+  &__content {
+    max-width: 1080px;
+    height: 56px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  &__mark {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius);
+    background: var(--color-accent);
+    color: white;
+    font-size: 14px;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 4px;
+
+    a {
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      color: var(--color-text-muted);
+      font-size: 14px;
+      text-decoration: none;
+
+      &:hover {
+        background: var(--color-bg);
+        color: var(--color-text);
+      }
+
+      &.is-active {
+        background: var(--color-accent-subtle);
+        color: var(--color-accent);
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.main {
+  max-width: 1080px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
