@@ -44,6 +44,9 @@
   </label>
 
   <div class="todo-form__actions">
+    @if (generalError(); as message) {
+      <span class="todo-form__error" role="alert">{{ message }}</span>
+    }
     <button type="submit" class="button" [disabled]="submitting()">作成</button>
   </div>
 </form>

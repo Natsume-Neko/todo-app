@@ -17,6 +17,7 @@ export class TodoForm {
   categories = signal<Category[]>([]);
   submitting = signal(false);
   serverErrors = signal<Record<string, string[]>>({});
+  generalError = signal<string | null>(null);
 
   form = this.fb.group({
     title:      ['', [Validators.required, Validators.maxLength(255)]],
@@ -36,6 +37,7 @@ export class TodoForm {
 
     this.submitting.set(true);
     this.serverErrors.set({});
+    this.generalError.set(null);
 
     this.todoApi.create(this.form.getRawValue() as TodoCreateInput).subscribe({
       next: () => {
@@ -47,6 +49,8 @@ export class TodoForm {
         this.submitting.set(false);
         if (err.status === 400) {
           this.serverErrors.set(err.error);
+        } else {
+          this.generalError.set('作成に失敗しました。時間をおいて再度お試しください。');
         }
       },
     })

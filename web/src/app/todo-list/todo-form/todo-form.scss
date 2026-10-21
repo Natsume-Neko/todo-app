@@ -30,4 +30,11 @@
 .todo-form__actions { 
   display: flex; 
   justify-content: flex-end; 
+  align-items: center;
+  gap: 12px;
+}
+
+.todo-form__error {
+  font-size: 13px;
+  color: #c53030;
 }
