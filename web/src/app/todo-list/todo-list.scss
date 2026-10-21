@@ -11,6 +11,8 @@
   }
 }
 
+.card + .card { margin-top: 24px; }
+
 .todo-table {
   width: 100%;
   border-collapse: collapse;
