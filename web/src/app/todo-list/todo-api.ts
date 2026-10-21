@@ -3,10 +3,10 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TodoItem } from './todo-types';
 
-export interface TodoCreateInput { 
-  title: string; 
-  body: string; 
-  categoryId: number; 
+export interface TodoCreateInput {
+  title: string;
+  body: string;
+  categoryId: number;
 }
 
 export interface Category {
@@ -29,6 +29,6 @@ export class TodoApi {
   }
 
   categories(): Observable<Category[]> {
-    return this.http.get<Category[]>('/api/categories')
+    return this.http.get<Category[]>('/api/categories');
   }
 }

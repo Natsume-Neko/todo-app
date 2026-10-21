@@ -20,13 +20,13 @@ export class TodoForm {
   generalError = signal<string | null>(null);
 
   form = this.fb.group({
-    title:      ['', [Validators.required, Validators.maxLength(255)]],
-    body:       ['', [Validators.maxLength(21845)]],
+    title: ['', [Validators.required, Validators.maxLength(255)]],
+    body: ['', [Validators.maxLength(21845)]],
     categoryId: this.fb.control<number | null>(null, Validators.required),
-  })
+  });
 
   constructor() {
-    this.todoApi.categories().subscribe(categories => this.categories.set(categories));
+    this.todoApi.categories().subscribe((categories) => this.categories.set(categories));
   }
 
   submit() {
@@ -53,6 +53,6 @@ export class TodoForm {
           this.generalError.set('作成に失敗しました。時間をおいて再度お試しください。');
         }
       },
-    })
+    });
   }
 }

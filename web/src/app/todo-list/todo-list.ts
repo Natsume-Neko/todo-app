@@ -18,10 +18,10 @@ export class TodoList {
   protected readonly colorClasses = COLOR_CLASSES;
 
   constructor() {
-    this.load()
+    this.load();
   }
 
   load() {
-    this.todoApi.list().subscribe(todos => this.todos.set(todos));
+    this.todoApi.list().subscribe((todos) => this.todos.set(todos));
   }
 }
