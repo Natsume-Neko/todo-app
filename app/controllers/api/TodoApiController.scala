@@ -14,6 +14,7 @@ import play.api.i18n.I18nSupport
 import model.TodoUpdateData
 import lib.persistence.TodoCategoryRepository
 import play.api.libs.json._
+import model.ApiValueTodoItem
 
 @Singleton
 class TodoApiController @Inject() (
@@ -21,13 +22,13 @@ class TodoApiController @Inject() (
   todoRepository:           TodoRepository,
 )(implicit ec:              scala.concurrent.ExecutionContext)
   extends BaseController {
-  implicit val todoWrites: OWrites[ViewValueTodoItem] = Json.writes[ViewValueTodoItem]
+  implicit val todoWrites: OWrites[ApiValueTodoItem] = Json.writes[ApiValueTodoItem]
 
   def list() = Action.async { implicit req =>
     val todosFuture = todoRepository.getAllJoined()
     todosFuture.map(todos => {
       val todosView = todos.map {
-        case (todo, category) => ViewValueTodoItem.from(todo.toEmbeddedId, category)
+        case (todo, category) => ApiValueTodoItem.from(todo.toEmbeddedId, category)
       }
       Ok(Json.toJson(todosView))
     })

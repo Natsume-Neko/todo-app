@@ -33,6 +33,29 @@ object ViewValueTodoItem {
     Todo.State.values.map(s => (s.code.toString(), stateLabel(s)))
 }
 
+case class ApiValueTodoItem(
+  id:           Long,
+  categoryId:   Long,
+  title:        String,
+  body:         String,
+  state:        Short, // 0: "TODO" / 1: "進行中" / 2: "完了"
+  categoryName: String,
+  color:        Short,
+)
+
+object ApiValueTodoItem {
+  def from(todo: Todo#EmbeddedId, category: TodoCategory): ApiValueTodoItem =
+    ApiValueTodoItem(
+      id           = todo.v.id.get,
+      categoryId   = todo.v.categoryId,
+      title        = todo.v.title,
+      body         = todo.v.body,
+      state        = todo.v.state.code,
+      categoryName = category.name,
+      color        = category.color.code,
+    )
+}
+
 case class ViewValueTodoList(
   title:        String,
   cssSrc:       Seq[String],

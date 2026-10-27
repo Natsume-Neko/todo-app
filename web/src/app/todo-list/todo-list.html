@@ -18,12 +18,12 @@
           <td>
             <span
               class="state"
-              [class.state--doing]="todo.stateLabel === '進行中'"
-              [class.state--done]="todo.stateLabel === '完了'"
-            >{{ todo.stateLabel }}</span>
+              [class.state--doing]="todo.state === TodoState.Doing"
+              [class.state--done]="todo.state === TodoState.Done"
+            >{{ stateLabels[todo.state] }}</span>
           </td>
           <td>
-            <span class="color-swatch" [class]="todo.colorClass"></span>
+            <span class="color-swatch" [class]="colorClasses[todo.color]"></span>
             {{ todo.categoryName }}
           </td>
         </tr>

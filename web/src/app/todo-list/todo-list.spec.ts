@@ -19,9 +19,9 @@ describe('TodoList', () => {
               categoryId: 1,
               title: 'string',
               body: 'string',
-              stateLabel: 'string',
+              state: 0,
               categoryName: 'string',
-              colorClass: 'string',
+              color: 0,
             }])
           }
         }
