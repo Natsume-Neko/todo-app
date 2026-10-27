@@ -16,6 +16,7 @@ import lib.persistence.TodoCategoryRepository
 import play.api.libs.json._
 import model.ApiValueTodoItem
 import scala.concurrent.Future
+import cats.data.EitherT
 
 @Singleton
 class TodoApiController @Inject() (
@@ -38,30 +39,34 @@ class TodoApiController @Inject() (
 
   def create() = Action.async { implicit req =>
     val boundForm = TodoForm.create.bindFromRequest()
-    boundForm.fold(
-      formWithError =>
-        Future.successful(BadRequest(formWithError.errorsAsJson)),
-      formData => {
-        val categoryId = TodoCategory.Id(formData.categoryId)
-        todoCategoryRepository.getCategoryById(categoryId).flatMap {
-          case Some(_) => {
-            val todo = Todo(
-              None,
-              categoryId,
-              formData.title,
-              formData.body,
-              Todo.State.NotBegin,
-            ).toWithNoId
-            todoRepository.addTodo(todo).map(newId =>
-              Created(Json.obj("id" -> newId.toLong))
-            )
-          }
-          case None    => Future.successful(BadRequest(boundForm.withError(
-            "categoryId",
-            "error.category.notFound"
-          ).errorsAsJson))
-        }
-      }
-    )
+
+    val result: EitherT[Future, Result, Result] = for {
+      formData <- EitherT.fromEither[Future](
+        boundForm.fold[Either[Result, TodoAddData]](
+          formWithError => Left(BadRequest(formWithError.errorsAsJson)),
+          data          => Right(data)
+        )
+      )
+      categoryId = TodoCategory.Id(formData.categoryId)
+      _ <- EitherT.fromOptionF(
+        todoCategoryRepository.getCategoryById(categoryId),
+        BadRequest(boundForm.withError(
+          "categoryId",
+          "error.category.notFound"
+        ).errorsAsJson)
+      )
+      todo = Todo(
+        None,
+        categoryId,
+        formData.title,
+        formData.body,
+        Todo.State.NotBegin,
+      ).toWithNoId
+      newId <- EitherT.right[Result](
+        todoRepository.addTodo(todo)
+      )
+    } yield Created(Json.obj("id" -> newId.toLong))
+    
+    result.merge
   }
 }
