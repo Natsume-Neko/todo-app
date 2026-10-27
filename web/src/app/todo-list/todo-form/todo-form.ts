@@ -1,7 +1,8 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Category, TodoApi, TodoCreateInput } from '../todo-api';
+import { TodoApi } from '../todo-api';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Category, TodoCreateInput } from '../todo-types';
 
 @Component({
   imports: [ReactiveFormsModule],

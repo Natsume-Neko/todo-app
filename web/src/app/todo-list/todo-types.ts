@@ -33,3 +33,16 @@ export interface TodoItem {
   categoryName: string;
   color: CategoryColor;
 }
+
+export interface TodoCreateInput {
+  title: string;
+  body: string;
+  categoryId: number;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  colorClass: string;
+}

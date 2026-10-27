@@ -1,20 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TodoItem } from './todo-types';
-
-export interface TodoCreateInput {
-  title: string;
-  body: string;
-  categoryId: number;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  colorClass: string;
-}
+import { Category, TodoCreateInput, TodoItem } from './todo-types';
 
 @Injectable({ providedIn: 'root' })
 export class TodoApi {
