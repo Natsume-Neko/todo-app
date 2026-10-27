@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TodoList } from './todo-list';
-import { TodoApi } from './todo-api';
-import { of } from 'rxjs';
+import { provideFakeTodoApi } from './testing/todo-fixtures';
 
 describe('TodoList', () => {
   let component: TodoList;
@@ -10,22 +9,7 @@ describe('TodoList', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TodoList],
-      providers: [
-        { 
-          provide: TodoApi,
-          useValue: {
-            list: () => of([{
-              id: 1,
-              categoryId: 1,
-              title: 'string',
-              body: 'string',
-              state: 0,
-              categoryName: 'string',
-              color: 0,
-            }])
-          }
-        }
-      ]
+      providers: [provideFakeTodoApi()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TodoList);
