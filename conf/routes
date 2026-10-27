@@ -30,3 +30,7 @@ GET     /api/todos                  controllers.api.TodoApiController.list()
 POST    /api/todos                  controllers.api.TodoApiController.create()
 
 GET     /api/categories             controllers.api.TodoCategoryApiController.list()
+
+PUT     /api/todos/:id              controllers.api.TodoApiController.edit(id: Long)
+
+DELETE  /api/todos/:id              controllers.api.TodoApiController.delete(id: Long)
