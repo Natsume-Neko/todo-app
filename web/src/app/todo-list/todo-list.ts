@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { TodoApi } from './todo-api';
-import { CategoryColor, COLOR_CLASSES, STATE_LABELS, TodoState } from './todo-codes';
+import { COLOR_CLASSES, STATE_LABELS, TodoState, TodoItem } from './todo-types';
 
 @Component({
   imports: [],
@@ -19,14 +19,4 @@ export class TodoList {
   constructor() {
     this.todoApi.list().subscribe(todos => this.todos.set(todos));
   }
-}
-
-export interface TodoItem {
-  id: number;
-  categoryId: number;
-  title: string;
-  body: string;
-  state: TodoState;
-  categoryName: string;
-  color: CategoryColor;
 }
