@@ -24,6 +24,23 @@ object ViewValueCategoryItem {
   val colorOptions = TodoCategory.Color.values.map(c => (c.code.toString(), colorClass(c)))
 }
 
+case class ApiValueCategoryItem(
+  id:    Long,
+  name:  String,
+  slug:  String,
+  color: Short,
+)
+
+object ApiValueCategoryItem {
+  def from(category: TodoCategory): ApiValueCategoryItem =
+    ApiValueCategoryItem(
+      id    = category.id.get,
+      name  = category.name,
+      slug  = category.slug,
+      color = category.color.code,
+    )
+}
+
 case class ViewValueCategories(
   title:        String,
   cssSrc:       Seq[String],

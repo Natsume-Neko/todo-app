@@ -7,7 +7,7 @@ export function makeCategory(overrides: Partial<Category> = {}): Category {
     id: 1,
     name: '仕事',
     slug: 'work',
-    colorClass: 'category--blue',
+    color: CategoryColor.Blue,
     ...overrides,
   };
 }

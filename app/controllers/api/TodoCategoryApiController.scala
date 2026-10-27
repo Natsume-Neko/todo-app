@@ -4,7 +4,7 @@ import lib.persistence.TodoCategoryRepository
 import javax.inject._
 import play.api.mvc._
 import scala.concurrent.ExecutionContext
-import model.ViewValueCategoryItem
+import model.ApiValueCategoryItem
 import model.ViewValueCategories
 import model.CategoryForm
 import play.api.data.Form
@@ -20,14 +20,14 @@ class TodoCategoryApiController @Inject() (
   todoCategoryRepository:   TodoCategoryRepository,
 )(implicit ec:              ExecutionContext)
   extends BaseController {
-  implicit val categoryWrites: OWrites[ViewValueCategoryItem] = 
-    Json.writes[ViewValueCategoryItem]
+  implicit val categoryWrites: OWrites[ApiValueCategoryItem] =
+    Json.writes[ApiValueCategoryItem]
 
   def list() = Action.async { implicit req =>
     val categoriesFuture = todoCategoryRepository.getAllCategories()
     categoriesFuture.map(categories => {
       val categoriesView = categories
-        .map(category => ViewValueCategoryItem.from(category))
+        .map(category => ApiValueCategoryItem.from(category))
       Ok(Json.toJson(categoriesView))
     })
   }

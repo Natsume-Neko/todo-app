@@ -44,5 +44,5 @@ export interface Category {
   id: number;
   name: string;
   slug: string;
-  colorClass: string;
+  color: CategoryColor;
 }
