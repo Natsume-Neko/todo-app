@@ -11,11 +11,16 @@
   }
 }
 
+.card + .card {
+  margin-top: 24px;
+}
+
 .todo-table {
   width: 100%;
   border-collapse: collapse;
 
-  th, td {
+  th,
+  td {
     padding: 12px;
     text-align: left;
     vertical-align: top;
@@ -28,10 +33,16 @@
     color: var(--color-text-muted);
   }
 
-  tbody tr:hover { background: var(--color-bg); }
-  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover {
+    background: var(--color-bg);
+  }
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
 
-  &__title { font-weight: 600; }
+  &__title {
+    font-weight: 600;
+  }
 
   &__body {
     white-space: pre-wrap;
@@ -54,8 +65,14 @@
   background: #eaeef2;
   color: #424a53;
 
-  &--doing { background: #ddf4ff; color: #0969da; }
-  &--done  { background: #dafbe1; color: #1a7f37; }
+  &--doing {
+    background: #ddf4ff;
+    color: #0969da;
+  }
+  &--done {
+    background: #dafbe1;
+    color: #1a7f37;
+  }
 }
 
 .color-swatch {

@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { TodoApi } from './todo-api';
 import { COLOR_CLASSES, STATE_LABELS, TodoState, TodoItem } from './todo-types';
+import { TodoForm } from './todo-form/todo-form';
 
 @Component({
-  imports: [],
+  imports: [TodoForm],
   selector: 'app-todo-list',
   styleUrl: './todo-list.scss',
   templateUrl: './todo-list.html',
@@ -17,6 +18,10 @@ export class TodoList {
   protected readonly colorClasses = COLOR_CLASSES;
 
   constructor() {
-    this.todoApi.list().subscribe(todos => this.todos.set(todos));
+    this.load();
+  }
+
+  load() {
+    this.todoApi.list().subscribe((todos) => this.todos.set(todos));
   }
 }
