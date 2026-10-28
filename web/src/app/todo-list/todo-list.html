@@ -1,0 +1,35 @@
+<div class="card">
+  <h1 class="card__title">Todo一覧</h1>
+
+  <table class="todo-table">
+    <thead>
+      <tr>
+        <th>タイトル</th>
+        <th>本文</th>
+        <th>ステータス</th>
+        <th>カテゴリ</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (todo of todos(); track todo.id) {
+        <tr>
+          <td class="todo-table__title">{{ todo.title }}</td>
+          <td class="todo-table__body">{{ todo.body }}</td>
+          <td>
+            <span
+              class="state"
+              [class.state--doing]="todo.state === TodoState.Doing"
+              [class.state--done]="todo.state === TodoState.Done"
+            >{{ stateLabels[todo.state] }}</span>
+          </td>
+          <td>
+            <span class="color-swatch" [class]="colorClasses[todo.color]"></span>
+            {{ todo.categoryName }}
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="4" class="todo-table__empty">Todoがありません</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
