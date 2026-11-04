@@ -8,6 +8,8 @@
   --color-accent: #0969da;
   --color-accent-subtle: #ddf4ff;
   --color-accent-hover: #0858b8;
+  --color-danger: #cf222e;
+  --color-danger-hover: #a40e26;
   --radius: 8px;
 }
 
@@ -79,5 +81,12 @@ body {
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &--danger {
+    background: var(--color-danger);
+    &:hover:not(:disabled) {
+      background: var(--color-danger-hover);
+    }
   }
 }

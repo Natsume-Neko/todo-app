@@ -18,4 +18,8 @@ export class TodoApi {
   categories(): Observable<Category[]> {
     return this.http.get<Category[]>('/api/categories');
   }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`/api/todos/${id}`);
+  }
 }

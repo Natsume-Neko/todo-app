@@ -24,4 +24,14 @@ export class TodoList {
   load() {
     this.todoApi.list().subscribe((todos) => this.todos.set(todos));
   }
+
+  remove(todo: TodoItem) {
+    if (!confirm(`「${todo.title}」を削除しますか？`)) {
+      return;
+    }
+    this.todoApi.delete(todo.id).subscribe({
+      next: () => this.load(),
+      error: () => alert('削除に失敗しました'),
+    });
+  }
 }
