@@ -1,0 +1,23 @@
+td {
+  padding: 3px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+  overflow-wrap: anywhere;
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font: inherit;
+  }
+
+  .field__error {
+    font-size: 12px;
+    display: block;
+    color: var(--color-danger);
+  }
+}

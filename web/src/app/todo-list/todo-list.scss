@@ -17,7 +17,21 @@
 
 .todo-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
+
+  &__col-title {
+    width: 20%;
+  }
+  &__col-state {
+    width: 120px;
+  }
+  &__col-cat {
+    width: 180px;
+  }
+  &__col-action {
+    width: 200px;
+  }
 
   th,
   td {
@@ -25,6 +39,7 @@
     text-align: left;
     vertical-align: top;
     border-bottom: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
   }
 
   th {
