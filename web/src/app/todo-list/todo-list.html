@@ -9,32 +9,46 @@
   <table class="todo-table">
     <thead>
       <tr>
-        <th>タイトル</th>
+        <th class="todo-table__col-title">タイトル</th>
         <th>本文</th>
-        <th>ステータス</th>
-        <th>カテゴリ</th>
+        <th class="todo-table__col-state">ステータス</th>
+        <th class="todo-table__col-cat">カテゴリ</th>
+        <th class="todo-table__col-action">操作</th>
       </tr>
     </thead>
     <tbody>
       @for (todo of todos(); track todo.id) {
-        <tr>
-          <td class="todo-table__title">{{ todo.title }}</td>
-          <td class="todo-table__body">{{ todo.body }}</td>
-          <td>
-            <span
-              class="state"
-              [class.state--doing]="todo.state === TodoState.Doing"
-              [class.state--done]="todo.state === TodoState.Done"
-            >{{ stateLabels[todo.state] }}</span>
-          </td>
-          <td>
-            <span class="color-swatch" [class]="colorClasses[todo.color]"></span>
-            {{ todo.categoryName }}
-          </td>
-        </tr>
+        @if (editingId() === todo.id) {
+          <tr app-todo-edit-row [todo]="todo" (saved)="onSaved()" (cancelled)="cancelEdit()"></tr>
+        } @else {
+          <tr>
+            <td class="todo-table__title">{{ todo.title }}</td>
+            <td class="todo-table__body">{{ todo.body }}</td>
+            <td>
+              <span
+                class="state"
+                [class.state--doing]="todo.state === TodoState.Doing"
+                [class.state--done]="todo.state === TodoState.Done"
+                >{{ stateLabels[todo.state] }}</span
+              >
+            </td>
+            <td>
+              <span class="color-swatch" [class]="colorClasses[todo.color]"></span>
+              {{ todo.categoryName }}
+            </td>
+            <td>
+              <div class="button-group">
+                <button type="button" class="button" (click)="startEdit(todo)">編集</button>
+                <button type="button" class="button button--danger" (click)="remove(todo)">
+                  削除
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
       } @empty {
         <tr>
-          <td colspan="4" class="todo-table__empty">Todoがありません</td>
+          <td colspan="5" class="todo-table__empty">Todoがありません</td>
         </tr>
       }
     </tbody>

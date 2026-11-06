@@ -40,6 +40,13 @@ export interface TodoCreateInput {
   categoryId: number;
 }
 
+export interface TodoEditInput {
+  title: string;
+  body: string;
+  state: TodoState;
+  categoryId: number;
+}
+
 export interface Category {
   id: number;
   name: string;

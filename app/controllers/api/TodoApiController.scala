@@ -69,4 +69,52 @@ class TodoApiController @Inject() (
     
     result.merge
   }
+
+  def edit(id: Long) = Action.async { implicit req =>
+    val boundForm = TodoForm.edit.bindFromRequest()
+
+    val result: EitherT[Future, Result, Result] = for {
+      formData <- EitherT.fromEither[Future](
+        boundForm.fold[Either[Result, TodoUpdateData]](
+          formWithError => Left(BadRequest(formWithError.errorsAsJson)),
+          data          => Right(data)
+        )
+      )
+      categoryId = TodoCategory.Id(formData.categoryId)
+
+      _ <- EitherT.fromOptionF(
+        todoCategoryRepository.getCategoryById(categoryId),
+        BadRequest(boundForm.withError(
+          "categoryId",
+          "error.category.notFound"
+        ).errorsAsJson)
+      )
+      
+      editResult <- EitherT.right[Result](
+        todoRepository.editTodo(
+          Todo.Id(id),
+          categoryId,
+          formData.title,
+          formData.body,
+          Todo.State(formData.state),
+        )
+      )
+
+      _ <- EitherT.cond[Future](
+        editResult != 0,
+        (),
+        NotFound: Result,
+      )
+    } yield NoContent
+
+    result.merge
+  }
+
+  def delete(id: Long) = Action.async { implicit req =>
+    todoRepository.deleteTodo(Todo.Id(id)).map {
+      case 0 => NotFound
+      case _ => NoContent
+    }
+  }
+
 }
