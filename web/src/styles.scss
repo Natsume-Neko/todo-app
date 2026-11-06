@@ -89,4 +89,18 @@ body {
       background: var(--color-danger-hover);
     }
   }
+
+  &--secondary {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    &:hover:not(:disabled) {
+      background: var(--color-bg);
+    }
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
 }
